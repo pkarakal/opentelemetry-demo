@@ -102,9 +102,10 @@
       "variants": {
         "10sec": 10000,
         "5sec": 5000,
+        "1sec": 1000,
         "off": 0
       },
-      "defaultVariant": "off"
+      "defaultVariant": "1sec"
     }
   }
 }

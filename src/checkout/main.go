@@ -34,15 +34,10 @@ import (
 	"go.opentelemetry.io/otel"
 	otelcodes "go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc"
-	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
-	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/propagation"
 
 	sdklog "go.opentelemetry.io/otel/sdk/log"
-	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
 	sdkresource "go.opentelemetry.io/otel/sdk/resource"
-	sdktrace "go.opentelemetry.io/otel/sdk/trace"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
@@ -65,54 +60,54 @@ var tracer trace.Tracer
 var resource *sdkresource.Resource
 var initResourcesOnce sync.Once
 
-func initResource() *sdkresource.Resource {
-	initResourcesOnce.Do(func() {
-		extraResources, _ := sdkresource.New(
-			context.Background(),
-			sdkresource.WithOS(),
-			sdkresource.WithProcess(),
-			sdkresource.WithContainer(),
-			sdkresource.WithHost(),
-		)
-		resource, _ = sdkresource.Merge(
-			sdkresource.Default(),
-			extraResources,
-		)
-	})
-	return resource
-}
+//func initResource() *sdkresource.Resource {
+//	initResourcesOnce.Do(func() {
+//		extraResources, _ := sdkresource.New(
+//			context.Background(),
+//			sdkresource.WithOS(),
+//			sdkresource.WithProcess(),
+//			sdkresource.WithContainer(),
+//			sdkresource.WithHost(),
+//		)
+//		resource, _ = sdkresource.Merge(
+//			sdkresource.Default(),
+//			extraResources,
+//		)
+//	})
+//	return resource
+//}
+//
+//func initTracerProvider() *sdktrace.TracerProvider {
+//	ctx := context.Background()
+//
+//	exporter, err := otlptracegrpc.New(ctx)
+//	if err != nil {
+//		logger.Error(fmt.Sprintf("new otlp trace grpc exporter failed: %v", err))
+//	}
+//	tp := sdktrace.NewTracerProvider(
+//		sdktrace.WithBatcher(exporter),
+//		sdktrace.WithResource(initResource()),
+//	)
+//	otel.SetTracerProvider(tp)
+//	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
+//	return tp
+//}
 
-func initTracerProvider() *sdktrace.TracerProvider {
-	ctx := context.Background()
-
-	exporter, err := otlptracegrpc.New(ctx)
-	if err != nil {
-		logger.Error(fmt.Sprintf("new otlp trace grpc exporter failed: %v", err))
-	}
-	tp := sdktrace.NewTracerProvider(
-		sdktrace.WithBatcher(exporter),
-		sdktrace.WithResource(initResource()),
-	)
-	otel.SetTracerProvider(tp)
-	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
-	return tp
-}
-
-func initMeterProvider() *sdkmetric.MeterProvider {
-	ctx := context.Background()
-
-	exporter, err := otlpmetricgrpc.New(ctx)
-	if err != nil {
-		logger.Error(fmt.Sprintf("new otlp metric grpc exporter failed: %v", err))
-	}
-
-	mp := sdkmetric.NewMeterProvider(
-		sdkmetric.WithReader(sdkmetric.NewPeriodicReader(exporter)),
-		sdkmetric.WithResource(initResource()),
-	)
-	otel.SetMeterProvider(mp)
-	return mp
-}
+//func initMeterProvider() *sdkmetric.MeterProvider {
+//	ctx := context.Background()
+//
+//	exporter, err := otlpmetricgrpc.New(ctx)
+//	if err != nil {
+//		logger.Error(fmt.Sprintf("new otlp metric grpc exporter failed: %v", err))
+//	}
+//
+//	mp := sdkmetric.NewMeterProvider(
+//		sdkmetric.WithReader(sdkmetric.NewPeriodicReader(exporter)),
+//		sdkmetric.WithResource(initResource()),
+//	)
+//	otel.SetMeterProvider(mp)
+//	return mp
+//}
 
 func initLoggerProvider() *sdklog.LoggerProvider {
 	ctx := context.Background()
@@ -152,26 +147,26 @@ func main() {
 	var port string
 	mustMapEnv(&port, "CHECKOUT_PORT")
 
-	tp := initTracerProvider()
-	defer func() {
-		if err := tp.Shutdown(context.Background()); err != nil {
-			logger.Error(fmt.Sprintf("Error shutting down tracer provider: %v", err))
-		}
-	}()
+	//tp := initTracerProvider()
+	//defer func() {
+	//	if err := tp.Shutdown(context.Background()); err != nil {
+	//		logger.Error(fmt.Sprintf("Error shutting down tracer provider: %v", err))
+	//	}
+	//}()
 
-	mp := initMeterProvider()
-	defer func() {
-		if err := mp.Shutdown(context.Background()); err != nil {
-			logger.Error(fmt.Sprintf("Error shutting down meter provider: %v", err))
-		}
-	}()
+	//mp := initMeterProvider()
+	//defer func() {
+	//	if err := mp.Shutdown(context.Background()); err != nil {
+	//		logger.Error(fmt.Sprintf("Error shutting down meter provider: %v", err))
+	//	}
+	//}()
 
-	lp := initLoggerProvider()
-	defer func() {
-		if err := lp.Shutdown(context.Background()); err != nil {
-			logger.Error(fmt.Sprintf("Error shutting down logger provider: %v", err))
-		}
-	}()
+	//lp := initLoggerProvider()
+	//defer func() {
+	//	if err := lp.Shutdown(context.Background()); err != nil {
+	//		logger.Error(fmt.Sprintf("Error shutting down logger provider: %v", err))
+	//	}
+	//}()
 
 	// this *must* be called after the logger provider is initialized
 	// otherwise the Sarama producer in kafka/producer.go will not be
@@ -192,7 +187,7 @@ func main() {
 	openfeature.SetProvider(provider)
 	openfeature.AddHooks(otelhooks.NewTracesHook())
 
-	tracer = tp.Tracer("checkout")
+	//tracer = tp.Tracer("checkout")
 
 	svc := new(checkout)
 
@@ -384,8 +379,8 @@ type orderPrep struct {
 
 func (cs *checkout) prepareOrderItemsAndShippingQuoteFromCart(ctx context.Context, userID, userCurrency string, address *pb.Address) (orderPrep, error) {
 
-	ctx, span := tracer.Start(ctx, "prepareOrderItemsAndShippingQuoteFromCart")
-	defer span.End()
+	//ctx, span := tracer.Start(ctx, "prepareOrderItemsAndShippingQuoteFromCart")
+	//defer span.End()
 
 	var out orderPrep
 	cartItems, err := cs.getUserCart(ctx, userID)
@@ -413,13 +408,13 @@ func (cs *checkout) prepareOrderItemsAndShippingQuoteFromCart(ctx context.Contex
 	for _, ci := range cartItems {
 		totalCart += ci.Quantity
 	}
-	shippingCostFloat, _ := strconv.ParseFloat(fmt.Sprintf("%d.%02d", shippingPrice.GetUnits(), shippingPrice.GetNanos()/1000000000), 64)
+	//shippingCostFloat, _ := strconv.ParseFloat(fmt.Sprintf("%d.%02d", shippingPrice.GetUnits(), shippingPrice.GetNanos()/1000000000), 64)
 
-	span.SetAttributes(
-		attribute.Float64("app.shipping.amount", shippingCostFloat),
-		attribute.Int("app.cart.items.count", int(totalCart)),
-		attribute.Int("app.order.items.count", len(orderItems)),
-	)
+	//span.SetAttributes(
+	//	attribute.Float64("app.shipping.amount", shippingCostFloat),
+	//	attribute.Int("app.cart.items.count", int(totalCart)),
+	//	attribute.Int("app.order.items.count", len(orderItems)),
+	//)
 	return out, nil
 }
 

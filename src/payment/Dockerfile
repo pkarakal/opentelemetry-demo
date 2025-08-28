@@ -28,4 +28,7 @@ COPY ./src/payment/opentelemetry.js opentelemetry.js
 
 EXPOSE ${PAYMENT_PORT}
 
-CMD ["--require=./opentelemetry.js", "index.js"]
+CMD [ \
+#    "--require=./opentelemetry.js", \
+    "index.js" \
+]
