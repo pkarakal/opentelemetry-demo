@@ -21,7 +21,7 @@
       }
     ]
   },
-  "description": "APM dashboard for monitoring OpenTelemetry-based services.  \n\nInstrument your applications using OpenTelemetry SDKs and send traces, metrics, and logs to Jaeger for traces, a Prometheus-compatible database for metrics, and OpenSearch for logs. This dashboard provides a centralized view of your application's health and performance. ",
+  "description": "APM dashboard for monitoring OpenTelemetry-based services.  \n\nInstrument your applications using OpenTelemetry SDKs and send traces, metrics, and logs to Tempo for traces, a Prometheus-compatible database for metrics, and Loki for logs. This dashboard provides a centralized view of your application's health and performance. ",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
@@ -112,7 +112,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "editorMode": "code",
           "expr": "timestamp(sum by (deployment_environment_name, service_namespace, service_name) (target_info{deployment_environment_name=~\"$deployment_environment_name\", service_namespace=~\"$service_namespace\", service_name=\"$service_name\"}) or absent{})\n",
@@ -245,7 +245,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -380,7 +380,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -674,7 +674,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -704,7 +704,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "editorMode": "code",
           "expr": "\n        histogram_quantile(\n            0.99,\n            sum by (le, operation) (\n                label_join(\n                rate(http_server_request_duration_seconds_bucket{deployment_environment_name=~\"$deployment_environment_name\", service_namespace=~\"$service_namespace\", service_name=\"$service_name\"}[5m]),\n                \"operation\",\n                \" \",\n                \"http_request_method\",\n                \"http_route\"\n                )\n            )\n        )\n    ",
@@ -863,7 +863,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -894,7 +894,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "editorMode": "code",
           "expr": "\n        histogram_quantile(\n            0.99,\n            sum by (le, operation) (\n                label_join(\n                rate(rpc_server_duration_milliseconds_bucket{deployment_environment_name=~\"$deployment_environment_name\", service_namespace=~\"$service_namespace\", service_name=\"$service_name\"}[5m]),\n                \"operation\",\n                \"/\",\n                \"rpc_service\",\n                \"rpc_method\"\n                )\n            )\n        )\n    ",
@@ -1060,7 +1060,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1090,7 +1090,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "editorMode": "code",
           "expr": "\nhistogram_quantile(\n    0.99,\n    sum by (le, outbound_service) (\n        label_join(\n        rate(http_client_request_duration_seconds_bucket{deployment_environment_name=~\"$deployment_environment_name\", service_namespace=~\"$service_namespace\", service_name=\"$service_name\"}[5m]),\n        \"outbound_service\",\n        \" \",\n        \"server_address\",\n        \"http_request_method\",\n        \"url_template\"\n        )\n    )\n)",
@@ -1246,7 +1246,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1277,7 +1277,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "editorMode": "code",
           "expr": "\nhistogram_quantile(\n    0.99,\n    sum by (le, database) (\n        label_join(\n        rate(db_client_operation_duration_seconds_bucket{deployment_environment_name=~\"$deployment_environment_name\", service_namespace=~\"$service_namespace\", service_name=\"$service_name\"}[5m]),\n            \"database\",\n            \"/\",\n            \"server_address\",\n            \"db_namespace\"\n        )\n    )\n)",
@@ -1437,7 +1437,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1468,7 +1468,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "editorMode": "code",
           "expr": "\nhistogram_quantile(\n    0.99,\n    sum by (le, outbound_service) (\n        label_join(\n        rate(rpc_client_duration_milliseconds_bucket{deployment_environment_name=~\"$deployment_environment_name\", service_namespace=~\"$service_namespace\", service_name=\"$service_name\"}[5m]),\n        \"outbound_service\",\n        \"/\",\n        \"server_address\",\n        \"rpc_service\",\n        \"rpc_method\"\n        )\n    )\n)",
@@ -1542,7 +1542,7 @@
     },
     {
       "datasource": {
-        "type": "grafana-opensearch-datasource",
+        "type": "loki",
         "uid": "${opensearch_datasource}"
       },
       "description": "Logs of the service, filtered by `service.name`, `service.namespace`, and `deployment.environment.name`.\n\nTo explore the logs, open the menu clicking on the icon `⋮` of this panel and click on `Explore`.",
@@ -1647,9 +1647,11 @@
             }
           ],
           "datasource": {
-            "type": "grafana-opensearch-datasource",
+            "type": "loki",
             "uid": "${opensearch_datasource}"
           },
+          "direction": "backward",
+          "expr": "{service_name=~\".+\", service_namespace=~\".+\"}",
           "format": "table",
           "hide": false,
           "luceneQueryType": "Logs",
@@ -1659,7 +1661,6 @@
               "type": "logs"
             }
           ],
-          "query": "search source=otel-logs-* | where resource.service.name=\"$service_name\" and resource.service.namespace=\"$service_namespace\" | fields @timestamp, severity.text, body, instrumentationScope.name\n",
           "queryType": "PPL",
           "refId": "B",
           "timeField": "observedTimestamp"
@@ -1713,8 +1714,8 @@
     },
     {
       "datasource": {
-        "type": "jaeger",
-        "uid": "${jaeger_datasource}"
+        "type": "tempo",
+        "uid": "${tempo_datasource}"
       },
       "description": "Traces containing a span emitted by the service",
       "fieldConfig": {
@@ -1831,8 +1832,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "jaeger",
-            "uid": "${jaeger_datasource}"
+            "type": "tempo",
+            "uid": "${tempo_datasource}"
           },
           "queryType": "search",
           "refId": "A",
@@ -1854,7 +1855,7 @@
         "allowCustomValue": false,
         "current": {
           "text": "Prometheus",
-          "value": "webstore-metrics"
+          "value": "mimir"
         },
         "description": "OpenTelemetry metrics. \nSend metrics using the Prometheus OTLP endpoint activating `keep_identifying_resource_attributes` and resource attribute promotion (aka `promote_resource_attributes`) including `service.name`, service.namespace`, `service.instance.id`, and `deployment.environment.name`",
         "label": "Metrics",
@@ -1868,14 +1869,14 @@
       {
         "allowCustomValue": false,
         "current": {
-          "text": "Jaeger",
-          "value": "webstore-traces"
+          "text": "Tempo",
+          "value": "tempo"
         },
         "description": "OpenTelemetry traces",
         "label": "Traces",
-        "name": "jaeger_datasource",
+        "name": "tempo_datasource",
         "options": [],
-        "query": "jaeger",
+        "query": "tempo",
         "refresh": 1,
         "regex": "",
         "type": "datasource"
@@ -1890,7 +1891,7 @@
         "label": "Logs",
         "name": "opensearch_datasource",
         "options": [],
-        "query": "grafana-opensearch-datasource",
+        "query": "loki",
         "refresh": 1,
         "regex": "",
         "type": "datasource"
@@ -1942,7 +1943,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "webstore-metrics"
+          "uid": "mimir"
         },
         "definition": "label_values(target_info{service_namespace=~\"$service_namespace\", deployment_environment_name=~\"$deployment_environment_name\"},service_name)",
         "description": "Service name.\nResource attribute `service.name` via `target_info`.",
@@ -1967,7 +1968,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "APM Dashboard (Jaeger, Prometheus, OpenSearch)",
+  "title": "APM Dashboard (Tempo, Mimir, Loki)",
   "uid": "febljk0a32qyoa",
   "version": 1
 }

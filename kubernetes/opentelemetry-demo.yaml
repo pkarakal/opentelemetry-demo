@@ -145,20 +145,20 @@ data:
       isDefault: true
       jsonData:
         exemplarTraceIdDestinations:
-        - datasourceUid: webstore-traces
+        - datasourceUid: tempo
           name: trace_id
         - name: trace_id
           url: http://localhost:8080/jaeger/ui/trace/$${__value.raw}
           urlDisplayLabel: View in Jaeger UI
       name: Prometheus
       type: prometheus
-      uid: webstore-metrics
+      uid: mimir
       url: http://prometheus:9090
     - editable: true
       isDefault: false
       name: Jaeger
       type: jaeger
-      uid: webstore-traces
+      uid: tempo
       url: http://jaeger-query:16686/jaeger/ui
     - access: proxy
       editable: true
@@ -959,7 +959,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -1043,7 +1043,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "expr": "sum by (span_name) (rate(traces_span_metrics_duration_milliseconds_count{service_name=\"${service}\"}[$__rate_interval]))",
@@ -1058,7 +1058,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "description": "",
           "fieldConfig": {
@@ -1142,7 +1142,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "expr": "sum by (span_name) (rate(traces_span_metrics_calls_total{status_code=\"STATUS_CODE_ERROR\", service_name=\"${service}\"}[$__rate_interval]))",
@@ -1158,7 +1158,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "description": "",
           "fieldConfig": {
@@ -1243,7 +1243,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -1557,7 +1557,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -1640,7 +1640,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "expr": "rate(process_runtime_cpython_cpu_time_seconds_total{type=~\"system\"}[$__rate_interval])*100",
@@ -1653,7 +1653,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "expr": "rate(process_runtime_cpython_cpu_time_seconds_total{type=~\"user\"}[$__rate_interval])*100",
@@ -1679,7 +1679,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -1762,7 +1762,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "expr": "process_runtime_cpython_memory_bytes{type=\"rss\"}",
@@ -1786,7 +1786,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -1868,7 +1868,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "expr": "rate(app_recommendations_counter_total{recommendation_type=\"catalog\"}[$__rate_interval])",
@@ -1884,7 +1884,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -1967,7 +1967,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "expr": "rate(otel_trace_span_processor_spans{job=\"quote\"}[2m])*120",
@@ -1996,7 +1996,7 @@ data:
         {
           "datasource": {
             "type": "jaeger",
-            "uid": "webstore-traces"
+            "uid": "tempo"
           },
           "fieldConfig": {
             "defaults": {},
@@ -2024,7 +2024,7 @@ data:
             {
               "datasource": {
                 "type": "jaeger",
-                "uid": "webstore-traces"
+                "uid": "tempo"
               },
               "queryType": "dependencyGraph",
               "refId": "A"
@@ -2047,7 +2047,7 @@ data:
             },
             "datasource": {
               "type": "prometheus",
-              "uid": "webstore-metrics"
+              "uid": "mimir"
             },
             "definition": "traces_span_metrics_duration_milliseconds_bucket",
             "includeAll": false,
@@ -2141,7 +2141,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -2223,7 +2223,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -2305,7 +2305,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "disableTextWrap": false,
               "editorMode": "builder",
@@ -2338,7 +2338,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -2420,7 +2420,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -2501,7 +2501,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "disableTextWrap": false,
               "editorMode": "builder",
@@ -8927,7 +8927,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -8992,7 +8992,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -9008,7 +9008,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -9023,7 +9023,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -9037,7 +9037,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -9055,7 +9055,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -9127,7 +9127,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -9146,7 +9146,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -9214,7 +9214,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -9245,7 +9245,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "description": "",
           "fieldConfig": {
@@ -9383,7 +9383,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "exemplar": false,
               "expr": "topk(7, sum(rate(traces_span_metrics_calls_total{service_name=~\"$service\", span_name=~\"$span_name\"}[$__range])) by (span_name,service_name)) ",
@@ -9396,7 +9396,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "exemplar": false,
               "expr": "topk(7, sum(rate(traces_span_metrics_calls_total{status_code=\"STATUS_CODE_ERROR\",service_name=~\"$service\", span_name=~\"$span_name\"}[$__range])) by (span_name,service_name))",
@@ -9514,7 +9514,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -9578,7 +9578,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -9594,7 +9594,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -9609,7 +9609,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -9623,7 +9623,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -9641,7 +9641,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -9703,7 +9703,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -9721,7 +9721,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -9808,7 +9808,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "webstore-metrics"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "exemplar": true,
@@ -9838,7 +9838,7 @@ data:
             },
             "datasource": {
               "type": "prometheus",
-              "uid": "webstore-metrics"
+              "uid": "mimir"
             },
             "definition": "query_result(count by (service_name)(count_over_time(traces_span_metrics_calls_total[$__range])))",
             "includeAll": true,
@@ -9862,7 +9862,7 @@ data:
             },
             "datasource": {
               "type": "prometheus",
-              "uid": "webstore-metrics"
+              "uid": "mimir"
             },
             "definition": "query_result(sum ({__name__=~\".*traces_span_metrics_calls_total\",service_name=~\"$service\"})  by (span_name))",
             "includeAll": true,

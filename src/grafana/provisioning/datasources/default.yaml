@@ -15,7 +15,7 @@ datasources:
       # Align Prometheus data source time interval with the OTel SDKs' export interval (see OTEL_METRIC_EXPORT_INTERVAL)
       timeInterval: "60s"
       exemplarTraceIdDestinations:
-        - datasourceUid: webstore-traces
+        - datasourceUid: tempo
           name: trace_id
 
         - url: http://localhost:8080/jaeger/ui/trace/$${__value.raw}

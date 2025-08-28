@@ -62,7 +62,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "webstore-metrics"
+        "uid": "mimir"
       },
       "fieldConfig": {
         "defaults": {
@@ -144,7 +144,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "webstore-metrics"
+        "uid": "mimir"
       },
       "fieldConfig": {
         "defaults": {
@@ -226,7 +226,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "disableTextWrap": false,
           "editorMode": "builder",
@@ -259,7 +259,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "webstore-metrics"
+        "uid": "mimir"
       },
       "fieldConfig": {
         "defaults": {
@@ -341,7 +341,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "webstore-metrics"
+        "uid": "mimir"
       },
       "fieldConfig": {
         "defaults": {
@@ -423,7 +423,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "disableTextWrap": false,
           "editorMode": "builder",

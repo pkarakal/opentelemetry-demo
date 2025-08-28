@@ -119,21 +119,18 @@ receivers:
             enabled: true
 exporters:
   debug:
-  otlp:
-    endpoint: "jaeger:4317"
+  otlp/tempo:
+    endpoint: tempo:4317
     tls:
       insecure: true
   otlphttp/prometheus:
     endpoint: "http://prometheus:9090/api/v1/otlp"
     tls:
       insecure: true
-  opensearch:
-    logs_index: otel-logs
-    logs_index_time_format: "yyyy-MM-dd"
-    http:
-      endpoint: "http://opensearch:9200"
-      tls:
-        insecure: true
+  prometheusremotewrite/prometheus:
+    endpoint: "http://mimir:9009/api/v1/push"
+  otlphttp/loki:
+    endpoint: "http://loki:3100/otlp"
 processors:
   batch:
   memory_limiter:
@@ -159,15 +156,15 @@ service:
     traces:
       receivers: [otlp]
       processors: [resourcedetection, memory_limiter, transform, batch]
-      exporters: [otlp, debug, spanmetrics]
+      exporters: [otlp/tempo, debug, spanmetrics]
     metrics:
       receivers: [docker_stats, httpcheck/frontend-proxy, hostmetrics, nginx, otlp, postgresql, redis, spanmetrics]
       processors: [resourcedetection, memory_limiter, batch]
-      exporters: [otlphttp/prometheus, debug]
+      exporters: [otlphttp/prometheus, prometheusremotewrite/prometheus, debug]
     logs:
       receivers: [otlp]
       processors: [resourcedetection, memory_limiter, batch]
-      exporters: [opensearch, debug]
+      exporters: [otlphttp/loki, debug]
   telemetry:
     metrics:
       level: detailed

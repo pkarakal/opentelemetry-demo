@@ -564,7 +564,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "webstore-metrics"
+        "uid": "mimir"
       },
       "description": "Total number of CPU cores",
       "fieldConfig": {
@@ -644,7 +644,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "webstore-metrics"
+        "uid": "mimir"
       },
       "description": "Total RAM",
       "fieldConfig": {
@@ -827,7 +827,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "webstore-metrics"
+        "uid": "mimir"
       },
       "description": "Total FS\n\nhttps://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/hostmetricsreceiver/internal/scraper/filesystemscraper/documentation.md",
       "fieldConfig": {
@@ -1028,7 +1028,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "webstore-metrics"
+        "uid": "mimir"
       },
       "description": "",
       "fieldConfig": {
@@ -2106,7 +2106,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "webstore-metrics"
+        "uid": "mimir"
       },
       "fieldConfig": {
         "defaults": {
@@ -2233,7 +2233,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2250,7 +2250,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "editorMode": "code",
           "expr": "sum by(device) (rate(system_network_io_bytes_total{k8s_cluster_name=~\"$k8s_cluster_name\", k8s_node_name=~\"${node_name}\", host_name=~\"$host_name\", job=\"\", direction=\"receive\"}[$__rate_interval]))",
@@ -2263,7 +2263,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "editorMode": "code",
           "expr": "sum by(device) (rate(system_network_dropped_total{k8s_cluster_name=~\"$k8s_cluster_name\", k8s_node_name=~\"${node_name}\", host_name=~\"$host_name\", job=\"\",direction=\"receive\"}[$__rate_interval]))",
@@ -2276,7 +2276,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "editorMode": "code",
           "expr": "sum by(device) (rate(system_network_dropped_total{k8s_cluster_name=~\"$k8s_cluster_name\", k8s_node_name=~\"${node_name}\", host_name=~\"$host_name\", job=\"\",direction=\"transmit\"}[$__rate_interval]))",
@@ -2289,7 +2289,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "editorMode": "code",
           "expr": "sum by(device) (rate(system_network_errors_total{k8s_cluster_name=~\"$k8s_cluster_name\", k8s_node_name=~\"${node_name}\", host_name=~\"$host_name\", job=\"\",direction=\"receive\"}[$__rate_interval]))",
@@ -2302,7 +2302,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "editorMode": "code",
           "expr": "sum by(device) (rate(system_network_errors_total{k8s_cluster_name=~\"$k8s_cluster_name\", k8s_node_name=~\"${node_name}\", host_name=~\"$host_name\", job=\"\",direction=\"transmit\"}[$__rate_interval]))",
@@ -2387,7 +2387,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "webstore-metrics"
+        "uid": "mimir"
       },
       "fieldConfig": {
         "defaults": {
@@ -2535,7 +2535,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "webstore-metrics"
+            "uid": "mimir"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -2700,7 +2700,7 @@
       {
         "current": {
           "text": "Prometheus",
-          "value": "webstore-metrics"
+          "value": "mimir"
         },
         "includeAll": false,
         "label": "Data Source",

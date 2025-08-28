@@ -16,6 +16,7 @@ import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.baggage.Baggage;
 import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.api.common.Attributes;
+import io.opentelemetry.api.metrics.DoubleHistogram;
 import io.opentelemetry.api.metrics.LongCounter;
 import io.opentelemetry.api.metrics.Meter;
 import io.opentelemetry.api.trace.Span;
@@ -67,6 +68,25 @@ public final class AdService {
           .counterBuilder("app.ads.ad_requests")
           .setDescription("Counts ad requests by request and response type")
           .build();
+
+  private static final LongCounter adRequestsFailed =
+          meter
+                  .counterBuilder("app.ads.ad_requests.failed")
+                  .setDescription("Counts ad requests that failed")
+                  .build();
+
+  private static final DoubleHistogram adRequestDuration =
+          meter
+                  .histogramBuilder("app.ads.ad_requests.duration")
+                  .setDescription("Creates a histogram for the request duration of the requests")
+                  .setUnit("ms")
+                  .build();
+
+  private static final DoubleHistogram adsServed =
+          meter
+                  .histogramBuilder("app.ads.ads_served")
+                  .setDescription("Number of adds served over time")
+                  .build();
 
   private static final AttributeKey<String> adRequestTypeKey =
       AttributeKey.stringKey("app.ads.ad_request_type");
@@ -152,6 +172,7 @@ public final class AdService {
 
       // get the current span in context
       Span span = Span.current();
+      long start = System.currentTimeMillis();
       try {
         List<Ad> allAds = new ArrayList<>();
         AdRequestType adRequestType;
@@ -196,6 +217,8 @@ public final class AdService {
         span.setAttribute("app.ads.ad_request_type", adRequestType.name());
         span.setAttribute("app.ads.ad_response_type", adResponseType.name());
 
+        adsServed.record(allAds.size(), Attributes.of(adRequestTypeKey, adRequestType.name()));
+
         adRequestsCounter.add(
             1,
             Attributes.of(
@@ -203,6 +226,7 @@ public final class AdService {
 
         // Throw 1/10 of the time to simulate a failure when the feature flag is enabled
         if (ffClient.getBooleanValue(AD_FAILURE, false, evaluationContext) && random.nextInt(10) == 0) {
+          span.setStatus(StatusCode.ERROR, Status.UNAVAILABLE.toString());
           throw new StatusRuntimeException(Status.UNAVAILABLE);
         }
 
@@ -216,11 +240,14 @@ public final class AdService {
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
       } catch (StatusRuntimeException e) {
+        adRequestsFailed.add(1);
         span.addEvent(
             "Error", Attributes.of(AttributeKey.stringKey("exception.message"), e.getMessage()));
         span.setStatus(StatusCode.ERROR);
         logger.log(Level.WARN, "GetAds Failed with status {}", e.getStatus());
         responseObserver.onError(e);
+      } finally {
+        adRequestDuration.record(System.currentTimeMillis() - start);
       }
     }
   }
