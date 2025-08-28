@@ -577,7 +577,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 400M
+          memory: 1000M
     restart: unless-stopped
     ports:
       - "${OTEL_COLLECTOR_PORT_GRPC}"
@@ -591,7 +591,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 300M
+          memory: 500M
     restart: unless-stopped
     command:
       - -config.file=/etc/mimir-config/mimir.yaml
@@ -620,7 +620,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 120M
+          memory: 500M
     restart: unless-stopped
     environment:
       - "GF_INSTALL_PLUGINS=grafana-opensearch-datasource"
