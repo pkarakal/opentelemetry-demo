@@ -41,6 +41,7 @@ first_run = True
 
 class RecommendationService(demo_pb2_grpc.RecommendationServiceServicer):
     def ListRecommendations(self, request, context):
+        logger.debug("Received ListRecommendations request")
         prod_list = get_product_list(request.product_ids)
         span = trace.get_current_span()
         span.set_attribute("app.products_recommended.count", len(prod_list))
@@ -51,7 +52,7 @@ class RecommendationService(demo_pb2_grpc.RecommendationServiceServicer):
         response.product_ids.extend(prod_list)
 
         # Collect metrics for this service
-        rec_svc_metrics["app_recommendations_counter"].add(len(prod_list), {'recommendation.type': 'catalog'})
+        app_recommendations_counter.add(len(prod_list), {'recommendation.type': 'catalog'})
 
         return response
 
@@ -81,6 +82,7 @@ def get_product_list(request_product_ids):
                 first_run = False
                 span.set_attribute("app.cache_hit", False)
                 logger.info("get_product_list: cache miss")
+                app_recommendations_cache_misses.add(1, context=span.get_span_context())
                 cat_response = product_catalog_stub.ListProducts(demo_pb2.Empty())
                 response_ids = [x.id for x in cat_response.products]
                 cached_ids = cached_ids + response_ids
@@ -88,6 +90,7 @@ def get_product_list(request_product_ids):
                 product_ids = cached_ids
             else:
                 span.set_attribute("app.cache_hit", True)
+                app_recommendations_cache_hits.add(1, context=span.get_span_context())
                 logger.info("get_product_list: cache hit")
                 product_ids = cached_ids
         else:
@@ -134,7 +137,7 @@ if __name__ == "__main__":
     # Initialize Traces and Metrics
     tracer = trace.get_tracer_provider().get_tracer(service_name)
     meter = metrics.get_meter_provider().get_meter(service_name)
-    rec_svc_metrics = init_metrics(meter)
+    app_recommendations_counter, app_recommendations_cache_misses, app_recommendations_cache_hits = init_metrics(meter)
 
     # Initialize Logs
     logger_provider = LoggerProvider(
